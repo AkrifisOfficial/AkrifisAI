@@ -1,0 +1,29 @@
+version: '3.8'
+
+services:
+  frontend:
+    build: ./client
+    ports:
+      - "3000:3000"
+    environment:
+      VITE_API_URL: "http://backend:8000"
+    depends_on:
+      - backend
+
+  backend:
+    build: ./server
+    ports:
+      - "8000:8000"
+    environment:
+      OPENAI_API_KEY: ${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}
+      HF_API_TOKEN: ${HF_API_TOKEN}
+    volumes:
+      - ./models:/app/models
+
+  nginx:
+    image: nginx:alpine
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf
+      - ./client/dist:/usr/share/nginx/html
